@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Sensor Data Display</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
 <body>
-    <h1>Sensor Data</h1>
-    <div id="sensorData">No data yet</div>
-    <button onclick="refreshData()">Refresh Data</button>
-    <script src="getData.js"></script>
+    <div class="container">
+        <h1>Sensor Data</h1>
+        <div id="sensorData" class="sensor-data">No data yet</div>
+        <button onclick="refreshData()" class="refresh-button">Refresh Data</button>
+    </div>
+    <script src="scripts.js"></script>
 </body>
 </html>
