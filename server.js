@@ -1,6 +1,5 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+const express = require('express');
+const app = express();
 const { SerialPort } = require('serialport');
 const { ReadlineParser } = require('@serialport/parser-readline');
 
@@ -13,7 +12,7 @@ const arduinoPort = new SerialPort({
   if (err) {
     console.log('Failed to connect to Arduino, using mock data instead.');
     setInterval(() => {
-      sensorData = Math.floor(Math.random() * 100).toString(); // Mock data
+      sensorData = Math.floor(Math.random() * 100).toString();
     }, 1000);
   } else {
     const parser = arduinoPort.pipe(new ReadlineParser({ delimiter: '\r\n' }));
@@ -23,46 +22,21 @@ const arduinoPort = new SerialPort({
   }
 });
 
-const host = 'localhost';
-const serverPort = 8000;
+app.get('/data', (req, res) => {
+  res.send(sensorData);
+});
 
-const requestListener = function (req, res) {
-    if (req.url.startsWith('/data')) {
-        res.writeHead(200);
-        res.end(sensorData);
-        return;
-    }
+app.get('/sensor-data-1', (req, res) => {
+  res.send('sensor 1: ' + sensorData);
+});
 
-    let filePath = '.' + req.url;
-    if (filePath === './') {
-        filePath = './index.html';
-    }
+app.get('/sensor-data-2', (req, res) => {
+  res.send('sensor 2: ' + sensorData);
+});
 
-    const extname = String(path.extname(filePath)).toLowerCase();
-    const mimeTypes = {
-        '.html': 'text/html',
-        '.js': 'text/javascript',
-    };
+app.use(express.static('public')); // Serve static files from 'public' folder
 
-    const contentType = mimeTypes[extname] || 'application/octet-stream';
-
-    fs.readFile(filePath, function(error, content) {
-        if (error) {
-            if(error.code === 'ENOENT') {
-                res.writeHead(404);
-                res.end("Not Found");
-            } else {
-                res.writeHead(500);
-                res.end('Server Error: '+error.code);
-            }
-        } else {
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(content, 'utf-8');
-        }
-    });
-};
-
-const server = http.createServer(requestListener);
-server.listen(serverPort, host, () => {
-    console.log(`Server is running on http://${host}:${serverPort}`);
+const port = 8000;
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
