@@ -1,11 +1,18 @@
 function refreshData() {
   fetch("/data")
-    .then((response) => response.text())
+    .then((response) => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        return response.text();
+      }
+    })
     .then((data) => {
-      document.getElementById("sensorData").innerText = data;
+      if (data) {
+        document.getElementById("sensorData").innerText = data;
+      }
     })
     .catch((error) => {
-      console.error("Error fetching data:", error);
-      document.getElementById("sensorData").innerText = "Error fetching data";
+      console.error("Error:", error);
     });
 }

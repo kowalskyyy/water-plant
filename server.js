@@ -1,14 +1,55 @@
 const express = require("express");
-const setupSerialPort = require("./serialPortSetup");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const bcrypt = require("bcryptjs");
 const routes = require("./routes");
 
+const users = []; // In-memory user store
 const app = express();
 const port = 8000;
 
-const getSensorData = setupSerialPort();
+// Add a hardcoded user for testing
+users.push({
+  id: "1",
+  username: "admin",
+  password: bcrypt.hashSync("admin", 12),
+});
 
-app.use(express.static("public"));
-app.use("/", routes(getSensorData));
+passport.use(
+  new LocalStrategy((username, password, done) => {
+    const user = users.find((user) => user.username === username);
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      return done(null, false);
+    }
+    return done(null, user);
+  })
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  const user = users.find((user) => user.id === id);
+  done(null, user);
+});
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/", routes); // Setup routes
+app.use(express.static("public")); // Serve static files last
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
