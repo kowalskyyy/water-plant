@@ -1,9 +1,8 @@
 const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
 
+let sensorData = "No data yet";
 module.exports = function () {
-  let sensorData = "No data yet";
-
   const arduinoPort = new SerialPort(
     {
       path: "COM3", // Replace with your port
@@ -12,9 +11,11 @@ module.exports = function () {
     (err) => {
       if (err) {
         console.log("Failed to connect to Arduino, using mock data instead.");
-        setInterval(() => {
-          sensorData = Math.floor(Math.random() * 100).toString();
-        }, 1000);
+
+        sensorData = Math.floor(Math.random() * 100).toString();
+        console.log("mockedData" + sensorData);
+
+        return sensorData;
       } else {
         const parser = arduinoPort.pipe(
           new ReadlineParser({ delimiter: "\r\n" })
@@ -22,9 +23,10 @@ module.exports = function () {
         parser.on("data", (data) => {
           sensorData = data;
         });
+        return sensorData;
       }
     }
   );
 
-  return () => sensorData;
+  return sensorData;
 };

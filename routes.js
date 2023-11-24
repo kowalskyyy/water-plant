@@ -2,10 +2,14 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const path = require("path");
+const arduinoData = require("./serialPortSetup");
 
 let sensorData = "No data yet"; // Mocked sensor data
 setInterval(() => {
-  sensorData = Math.floor(Math.random() * 100).toString();
+  function randVal() {
+    return Math.floor(Math.random() * 100).toString();
+  }
+  sensorData = [arduinoData(), randVal(), randVal()];
 }, 1000);
 
 function isAuthenticated(req, res, next) {

@@ -10,7 +10,7 @@ function App() {
       const response = await axios.get("http://localhost:8000/data");
       console.log(response);
       console.log(response.data);
-      setCount(response.data);
+      setCount(response.data[0]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
