@@ -20,6 +20,10 @@ function App() {
       .catch((error) => console.error("Auth check failed", error));
   }, []);
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
     <Router>
       <Routes>
@@ -35,7 +39,13 @@ function App() {
         />
         <Route
           path="/"
-          element={isLoggedIn ? <Homepage /> : <Navigate to="/login" />}
+          element={
+            isLoggedIn ? (
+              <Homepage onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
       </Routes>
     </Router>
