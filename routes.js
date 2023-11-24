@@ -44,7 +44,10 @@ router.get("/logout", (req, res) => {
   });
 });
 
-router.get("/data", isAuthenticated, (req, res) => {
+router.get("/refresh", (req, res) => {});
+
+router.get("/data", (req, res) => {
+  console.log("data senet" + sensorData);
   res.send(sensorData);
 });
 

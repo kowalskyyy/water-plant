@@ -10,11 +10,15 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "create-react-app": "^5.0.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "git": "^0.1.5",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "serialport": "^12.0.0"
   }
 }

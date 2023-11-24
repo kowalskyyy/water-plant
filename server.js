@@ -4,6 +4,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const routes = require("./routes");
+const cors = require("cors");
 
 const users = []; // In-memory user store
 const app = express();
@@ -36,6 +37,13 @@ passport.deserializeUser((id, done) => {
 });
 
 app.use(express.urlencoded({ extended: true }));
+
+const corsOptions = {
+  origin: "http://localhost:3000", // or your specific origin
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 app.use(
   session({
