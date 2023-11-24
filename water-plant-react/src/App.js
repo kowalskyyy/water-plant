@@ -1,32 +1,44 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import axios from "axios";
-import React, { useState } from "react";
+import Login from "./Login";
+import Homepage from "./Homepage";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState("No data yet");
-  const [loggedUser, login] = useState(false);
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("/data");
-      console.log(response);
-      console.log(response.data);
-      setCount(response.data[0]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get("/api/check-auth")
+      .then((response) => setIsLoggedIn(response.data.isAuthenticated))
+      .catch((error) => console.error("Auth check failed", error));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <button onClick={fetchData}>Fetch data?</button>
-        <div>{count}</div>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            !isLoggedIn ? (
+              <Login onLogin={setIsLoggedIn} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/"
+          element={isLoggedIn ? <Homepage /> : <Navigate to="/login" />}
+        />
+      </Routes>
+    </Router>
   );
 }
 

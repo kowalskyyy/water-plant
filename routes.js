@@ -4,7 +4,7 @@ const passport = require("passport");
 const path = require("path");
 const arduinoData = require("./serialPortSetup");
 
-let sensorData = "No data yet"; // Mocked sensor data
+let sensorData = "No data yet";
 setInterval(() => {
   function randVal() {
     return Math.floor(Math.random() * 100).toString();
@@ -12,46 +12,53 @@ setInterval(() => {
   sensorData = [arduinoData(), randVal(), randVal()];
 }, 1000);
 
+// Check if user is authenticated
 function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("/login.html");
+  res.status(401).send("User not authenticated");
 }
 
-router.get("/", isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, "water-plant-react/build", "index.html"));
+// API to check if user is authenticated
+router.get("/api/check-auth", (req, res) => {
+  res.json({ isAuthenticated: req.isAuthenticated() });
 });
 
-router.get("/login.html", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.redirect("/");
-  } else {
-    res.sendFile(path.join(__dirname, "public", "login.html"));
-  }
+// Handle login
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    console.log(user);
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Authentication failed" });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.json({ success: true, message: "Authentication successful" });
+    });
+  })(req, res, next);
 });
 
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login.html",
-  })
-);
-
+// Handle logout
 router.get("/logout", (req, res) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
     }
-    res.redirect("/login.html");
+    res.redirect("/login");
   });
 });
 
-router.get("/refresh", (req, res) => {});
-
-router.get("/data", (req, res) => {
-  console.log("data senet" + sensorData);
+// Protected route for sensor data
+router.get("/data", isAuthenticated, (req, res) => {
+  console.log("data sent: " + sensorData);
   res.send(sensorData);
 });
 
