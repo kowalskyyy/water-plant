@@ -57,7 +57,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", routes); // Setup routes
-app.use(express.static("public")); // Serve static files last
+app.use(express.static("water-plant-react/build")); // Serve static files last
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

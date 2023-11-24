@@ -5,9 +5,10 @@ import React, { useState } from "react";
 
 function App() {
   const [count, setCount] = useState("No data yet");
+  const [loggedUser, login] = useState(false);
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/data");
+      const response = await axios.get("/data");
       console.log(response);
       console.log(response.data);
       setCount(response.data[0]);

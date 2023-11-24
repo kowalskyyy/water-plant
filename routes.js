@@ -20,7 +20,7 @@ function isAuthenticated(req, res, next) {
 }
 
 router.get("/", isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "water-plant-react/build", "index.html"));
 });
 
 router.get("/login.html", (req, res) => {
