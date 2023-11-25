@@ -34,7 +34,7 @@ const Homepage = ({ onLogout }) => {
 
   return (
     <div className="App App-header">
-      <h1>Welcome to the Water Plant Monitoring 1System</h1>
+      <h1>Water Plant Monitoring System</h1>
       <div className="plant-container">
         <PlantTile count={count[0]} />
         <PlantTile count={count[1]} />

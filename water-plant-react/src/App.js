@@ -9,6 +9,7 @@ import axios from "axios";
 import Login from "./Login";
 import Homepage from "./Homepage";
 import "./App.css";
+import NotFound from "./NotFound";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,7 +39,7 @@ function App() {
           }
         />
         <Route
-          path="/"
+          path="*"
           element={
             isLoggedIn ? (
               <Homepage onLogout={handleLogout} />

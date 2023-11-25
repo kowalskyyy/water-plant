@@ -5,6 +5,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const routes = require("./routes");
 const cors = require("cors");
+const path = require("path");
 
 const users = []; // In-memory user store
 const app = express();
@@ -57,7 +58,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", routes); // Setup routes
-app.use(express.static("water-plant-react/build")); // Serve static files last
+app.use(express.static(path.join(__dirname, "water-plant-react/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "water-plant-react/build", "index.html"));
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

@@ -1,0 +1,53 @@
+.Login {
+    text-align: center;
+  }
+  
+  .Login-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #444c56;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 250px;
+    font-size: 16px;
+  }
+  
+  input::placeholder {
+    color: #b1b1b1;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #61dafb;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #52b8e8;
+  }
+  

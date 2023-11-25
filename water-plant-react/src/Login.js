@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import logo from "./logo.svg";
-import "./App.css";
+import "./Login.css";
 import axios from "axios";
 
 const Login = ({ onLogin }) => {
@@ -28,7 +28,7 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="App App-header">
+    <form onSubmit={handleSubmit} className="Login Login-header">
       <input
         type="text"
         value={username}
