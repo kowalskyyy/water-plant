@@ -28,7 +28,6 @@ router.get("/api/check-auth", (req, res) => {
 // Handle login
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
-    console.log(user);
     if (err) {
       return next(err);
     }

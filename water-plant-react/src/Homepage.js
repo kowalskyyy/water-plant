@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
@@ -11,14 +11,7 @@ const Homepage = ({ onLogout }) => {
     "No data yet",
   ]);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("/data");
-      setCount(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const [ws, setWs] = useState(null);
 
   const logout = async () => {
     try {
@@ -31,6 +24,35 @@ const Homepage = ({ onLogout }) => {
   };
 
   const navigate = useNavigate();
+
+  const fetchData = async (val) => {
+    if (ws) {
+      ws.close();
+      setWs(null);
+      console.log("Websocket connection closed");
+    } else {
+      // Create a new WebSocket connection
+      const newWs = new WebSocket("ws://localhost:8000");
+
+      newWs.onopen = () => {
+        console.log("Connected to the WebSocket server");
+        newWs.send("start");
+      };
+
+      newWs.onmessage = (event) => {
+        const { sensor1, sensor2, sensor3 } = JSON.parse(event.data);
+        setCount([sensor1, sensor2, sensor3]);
+        console.log("event.data = ", event.data);
+        console.log("sensor1: ", sensor1);
+        console.log("sensor2: ", sensor2);
+      };
+
+      newWs.onclose = () => {
+        console.log("Disconnected from the WebSocket server");
+      };
+      setWs(newWs);
+    }
+  };
 
   return (
     <div className="App App-header">
